@@ -37,7 +37,8 @@ const escapeHTML = (text = "") => {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 };
 
 const getPrice = (item) => item.price || item.newPrice || "";
@@ -52,14 +53,12 @@ function showToast(message, duration = 1800) {
   if (!toast) return;
 
   toast.textContent = message;
-  toast.style.opacity = "1";
-  toast.style.pointerEvents = "auto";
+  toast.classList.add("show");
 
   clearTimeout(toast.hideTimer);
 
   toast.hideTimer = setTimeout(() => {
-    toast.style.opacity = "0";
-    toast.style.pointerEvents = "none";
+    toast.classList.remove("show");
   }, duration);
 }
 
@@ -76,7 +75,7 @@ function itemCard(item) {
       data-title="${escapeHTML(item.title)}"
       data-desc="${escapeHTML(item.description)}">
       <div class="card-icon">
-        ${item.icon || ""}
+        ${escapeHTML(item.icon || "")}
       </div>
       <h3>${escapeHTML(item.title)}</h3>
       <p>${escapeHTML(item.description)}</p>
@@ -163,13 +162,7 @@ function renderExtraLayer() {
 
   // Check if extra packages exist
   if (extraDatabase.length === 0) {
-    grid.innerHTML = `
-      <div class="promo-swipe-wrapper">
-        <div class="promos-grid">
-          ${stayTunedCard("Stay Tuned")}
-        </div>
-      </div>
-    `;
+    grid.innerHTML = stayTunedCard("Stay Tuned");
     return;
   }
 
@@ -186,9 +179,9 @@ function goHome() {
   const filters = $("variant-filters");
   const grid = $("category-items-grid");
 
-  if (filters) filters.style.display = "none";
-  if (category) category.style.display = "none";
-  if (home) home.style.display = "block";
+  if (filters) filters.classList.add("is-hidden");
+  if (category) category.classList.add("is-hidden");
+  if (home) home.classList.remove("is-hidden");
   if (grid) grid.innerHTML = "";
 
   currentNavigationState = [];
@@ -232,8 +225,8 @@ function openCategory(categoryName, description = "") {
 
   if (!home || !category || !grid) return;
 
-  home.style.display = "none";
-  category.style.display = "block";
+  home.classList.add("is-hidden");
+  category.classList.remove("is-hidden");
 
   currentNavigationState = [
     { type: "home" },
@@ -262,7 +255,7 @@ function openCategory(categoryName, description = "") {
       data-parent="${escapeHTML(categoryName)}"
       data-desc="${escapeHTML(description)}">
       <div class="platform-icon-wrap">
-        ${option.icon}
+        ${escapeHTML(option.icon)}
       </div>
       <div class="platform-info">
         <h3>${escapeHTML(option.title)}</h3>
@@ -298,7 +291,7 @@ function openVariants(platformName, parentCategory, description = "") {
   if (backText) backText.textContent = `Back to ${parentCategory}`;
 
   if (filters) {
-    filters.style.display = "flex";
+    filters.classList.remove("is-hidden");
 
     filters.querySelectorAll(".filter-btn").forEach((btn) => {
       btn.classList.remove("active");
@@ -394,7 +387,7 @@ function goBack() {
   const previous = currentNavigationState.at(-1);
 
   // Clear filters and grid
-  if (filters) filters.style.display = "none";
+  if (filters) filters.classList.add("is-hidden");
   if (grid) grid.innerHTML = "";
 
   // Go back to the previous category with correct data
@@ -414,6 +407,10 @@ function buyItem(card) {
   lastFocusedElement = document.activeElement;
 
   const orderInfo = $("orderInfo");
+  const fieldsBox = $("dynamicFields");
+  const modal = $("orderModal");
+
+  if (!orderInfo || !fieldsBox || !modal) return;
 
   orderInfo.innerHTML = `
     <strong>Product:</strong>
@@ -424,7 +421,6 @@ function buyItem(card) {
     <br><br>
   `;
 
-  const fieldsBox = $("dynamicFields");
   fieldsBox.innerHTML = "";
 
   const fields = categoryFields[card.dataset.category] || [];
@@ -438,7 +434,6 @@ function buyItem(card) {
     fieldsBox.appendChild(input);
   });
 
-  const modal = $("orderModal");
   modal.classList.add("show");
   modal.setAttribute("aria-hidden", "false");
 
@@ -449,6 +444,8 @@ function validateOrder() {
   const button = $("messengerBtn");
   const inputs = [...document.querySelectorAll(".order-input")];
 
+  if (!button) return;
+
   if (!inputs.length) {
     button.disabled = false;
     return;
@@ -458,8 +455,11 @@ function validateOrder() {
 }
 
 function closeModal() {
-  $("orderModal").classList.remove("show");
-  $("orderModal").setAttribute("aria-hidden", "true");
+  const modal = $("orderModal");
+  if (!modal || !modal.classList.contains("show")) return;
+
+  modal.classList.remove("show");
+  modal.setAttribute("aria-hidden", "true");
 
   if (lastFocusedElement) lastFocusedElement.focus();
 }
@@ -475,7 +475,7 @@ function filterPromos(category, button) {
 
   if (button) button.classList.add("active");
 
-  const cards = document.querySelectorAll(".promo-card");
+  const cards = document.querySelectorAll("#promosGrid .promo-card");
   let visibleCount = 0;
 
   cards.forEach((card) => {
@@ -554,6 +554,7 @@ function filterVariants(category, button) {
 
 function openMessenger() {
   const orderInfo = $("orderInfo");
+  if (!orderInfo) return;
 
   let message = "🛒 GELJEMI STORE ORDER\n\n";
   message += orderInfo.innerText + "\n";
@@ -690,38 +691,17 @@ function handleKeydown(event) {
     closeModal();
   }
 
-  if (event.key === "Enter") {
+  if (event.key === "Enter" || event.key === " ") {
     const active = document.activeElement;
 
     if (
       active.classList.contains("card-link") ||
       active.classList.contains("platform-card")
     ) {
+      event.preventDefault();
       active.click();
     }
   }
-}
-
-/* =========================================================================
-   INTERSECTION OBSERVER FOR ANIMATIONS
-   ========================================================================= */
-
-function setupAnimations() {
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-
-        const wrapper = entry.target.querySelector(".promo-swipe-wrapper");
-        if (wrapper) wrapper.classList.add("animate-peek");
-      });
-    },
-    { threshold: 0.25 }
-  );
-
-  document
-    .querySelectorAll("#promos, #extra-layer")
-    .forEach((section) => observer.observe(section));
 }
 
 /* =========================================================================
@@ -746,15 +726,4 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target.id === "orderModal") closeModal();
   });
 
-  /* Setup animations */
-  setupAnimations();
 });
-
-/* =========================================================================
-   WINDOW EXPORTS (For global access if needed)
-   ========================================================================= */
-
-window.goHome = goHome;
-window.goBack = goBack;
-window.filterPromos = filterPromos;
-window.filterVariants = filterVariants;
