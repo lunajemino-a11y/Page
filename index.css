@@ -4,14 +4,16 @@
 
 :root {
   --bg-dark: #07020a;
-  --card-bg: rgba(255, 255, 255, 0.03);
-  --card-border: rgba(255, 255, 255, 0.07);
+  --card-bg: rgba(255, 255, 255, 0.045);
+  --card-border: rgba(255, 255, 255, 0.09);
   --text-primary: #ffffff;
-  --text-muted: rgba(255, 255, 255, 0.6);
+  --text-muted: rgba(255, 255, 255, 0.68);
   --accent-red: #ff3366;
   --accent-hover: #ff1a53;
-  --hero-gradient: linear-gradient(135deg, #0f081d 0%, #3a0026 50%, #6b0034 100%);
-  --text-gradient: linear-gradient(90deg, #ff5e97 0%, #ffabab 100%);
+  --accent-soft: rgba(255, 51, 102, 0.16);
+  --hero-gradient: radial-gradient(circle at 15% 12%, rgba(255, 113, 164, 0.26), transparent 34%), linear-gradient(135deg, #12071f 0%, #3a0026 48%, #760038 100%);
+  --text-gradient: linear-gradient(90deg, #ff6ba3 0%, #ffc1d1 100%);
+  --surface-glow: 0 24px 70px rgba(255, 51, 102, 0.16);
   --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-fast: all 0.2s ease;
 }
@@ -20,8 +22,28 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   scroll-behavior: smooth;
+}
+
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible {
+  outline: 3px solid rgba(255, 94, 151, 0.85);
+  outline-offset: 4px;
+}
+
+
+.is-hidden {
+  display: none !important;
+}
+
+.category-heading {
+  margin-top: 10px;
+}
+
+.variant-filters {
+  margin-bottom: 20px;
 }
 
 body {
@@ -31,7 +53,10 @@ body {
     radial-gradient(circle at bottom right, rgba(123, 44, 255, 0.12), transparent 45%);
   background-attachment: fixed;
   color: var(--text-primary);
-  padding: 40px 20px;
+  padding: clamp(18px, 4vw, 40px) clamp(12px, 3vw, 20px);
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
   display: flex;
   justify-content: center;
   min-height: 100vh;
@@ -47,7 +72,7 @@ body {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: clamp(22px, 4vw, 40px);
 }
 
 /* =========================================================================
@@ -64,14 +89,14 @@ body {
   background: rgba(7, 2, 10, 0.7);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  padding: 16px 32px;
+  padding: clamp(12px, 2vw, 16px) clamp(16px, 3vw, 32px);
   border-radius: 24px;
   border: 1px solid var(--card-border);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.55);
 }
 
 .logo {
-  font-size: 24px;
+  font-size: clamp(20px, 4vw, 24px);
   font-weight: 800;
   letter-spacing: -0.5px;
   background: var(--text-gradient);
@@ -107,10 +132,10 @@ body {
 .hero-section {
   background: var(--hero-gradient);
   border-radius: 32px;
-  padding: 90px 60px;
+  padding: clamp(42px, 8vw, 90px) clamp(22px, 5vw, 60px);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--surface-glow), 0 30px 60px rgba(0, 0, 0, 0.42);
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -160,7 +185,7 @@ body {
   font-weight: 800;
   line-height: 1.1;
   margin-bottom: 24px;
-  letter-spacing: -2px;
+  letter-spacing: clamp(-2px, -0.35vw, -0.8px);
 }
 
 .gradient-text {
@@ -172,9 +197,9 @@ body {
 
 .hero-text p {
   color: var(--text-muted);
-  font-size: 16px;
+  font-size: clamp(14px, 2vw, 16px);
   line-height: 1.7;
-  margin-bottom: 40px;
+  margin-bottom: clamp(22px, 4vw, 40px);
 }
 
 /* =========================================================================
@@ -188,7 +213,7 @@ body {
 
 .btn {
   display: inline-block;
-  padding: 16px 32px;
+  padding: 15px 26px;
   border-radius: 16px;
   font-size: 14px;
   font-weight: 600;
@@ -263,11 +288,11 @@ body {
    ========================================================================= */
 
 .portfolio-section {
-  padding: 30px 0;
+  padding: clamp(18px, 4vw, 30px) 0;
 }
 
 .section-header {
-  margin-bottom: 40px;
+  margin-bottom: clamp(22px, 4vw, 40px);
 }
 
 .section-header h2 {
@@ -280,7 +305,7 @@ body {
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 24px;
+  gap: clamp(14px, 3vw, 24px);
 }
 
 /* =========================================================================
@@ -291,7 +316,7 @@ body {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--card-border);
   border-radius: 28px;
-  padding: 28px;
+  padding: clamp(18px, 3vw, 28px);
   transition: var(--transition-smooth);
   position: relative;
   overflow: hidden;
@@ -379,13 +404,13 @@ body {
 
 .promos-grid {
   display: flex;
-  gap: 16px;
+  gap: clamp(12px, 3vw, 16px);
   width: max-content;
   padding: 4px 2px;
 }
 
 .promo-card {
-  width: clamp(240px, 75vw, 300px);
+  width: clamp(260px, 72vw, 310px);
   flex-shrink: 0;
   scroll-snap-align: start;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.008) 100%);
@@ -675,7 +700,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: clamp(20px, 4vw, 24px);
   flex-shrink: 0;
 }
 
@@ -940,14 +965,27 @@ body {
   }
 }
 
-@keyframes peekAnimation {
-  0%, 100% { transform: translateX(0); }
-  30% { transform: translateX(-40px); }
-  60% { transform: translateX(0); }
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  background: rgba(19, 19, 28, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 0;
+  padding: 12px 18px;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 2500;
 }
 
-.animate-peek {
-  animation: peekAnimation 2.5s ease-in-out;
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-4px);
 }
 
 /* =========================================================================
@@ -955,10 +993,6 @@ body {
    ========================================================================= */
 
 @media (max-width: 992px) {
-  .hero-section {
-    padding: 60px 40px;
-  }
-
   .hero-content {
     flex-direction: column;
     text-align: center;
@@ -977,52 +1011,78 @@ body {
   }
 
   .cards-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .promo-card {
-    width: clamp(260px, 80vw, 320px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .section-header h2 {
-    font-size: 36px;
+    font-size: clamp(30px, 6vw, 38px);
   }
 }
 
 @media (max-width: 768px) {
   body {
-    padding: 20px 12px;
+    background-image:
+      radial-gradient(circle at top, rgba(255, 83, 145, 0.18), transparent 36%),
+      radial-gradient(circle at bottom right, rgba(123, 44, 255, 0.16), transparent 44%);
   }
 
   .navbar {
-    padding: 12px 20px;
-    top: 10px;
-    gap: 20px;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 14px;
+    top: 8px;
   }
 
   .logo {
-    font-size: 18px;
+    text-align: center;
   }
 
   .nav-links {
-    gap: 16px;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 18px;
+    display: grid;
+    gap: 6px;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 5px;
   }
 
   .nav-links a {
+    border-radius: 13px;
     font-size: 12px;
+    padding: 10px 6px;
+    text-align: center;
+  }
+
+  .nav-links a.active {
+    background: rgba(255, 51, 102, 0.18);
+    box-shadow: inset 0 0 0 1px rgba(255, 51, 102, 0.22);
   }
 
   .hero-section {
-    padding: 48px 24px;
-    border-radius: 24px;
+    border-radius: 28px;
+  }
+
+  .hero-content {
+    text-align: left;
+  }
+
+  .badge {
+    font-size: 11px;
+    margin-bottom: 18px;
+    padding: 6px 13px;
   }
 
   .hero-text h1 {
-    font-size: 38px;
+    font-size: clamp(36px, 12vw, 48px);
+    line-height: 1.02;
+    margin-bottom: 18px;
   }
 
   .hero-text p {
-    font-size: 14px;
+    font-size: 15px;
+    line-height: 1.65;
+    margin-bottom: 28px;
   }
 
   .hero-buttons {
@@ -1034,192 +1094,180 @@ body {
     width: 100%;
   }
 
-  .section-header h2 {
-    font-size: 28px;
+  .btn {
+    border-radius: 18px;
+    font-size: 14px;
+    padding: 15px 18px;
   }
 
+  .section-header h2 {
+    font-size: clamp(28px, 9vw, 34px);
+    letter-spacing: -1px;
+  }
+
+  .cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .card {
+    border-radius: 22px;
+    min-height: 170px;
+  }
+
+  .card-icon {
+    border-radius: 18px;
+    height: 52px;
+    margin-bottom: 16px;
+    width: 52px;
+  }
+
+  .card h3 {
+    font-size: 17px;
+  }
+
+  .card p {
+    font-size: 12px;
+    line-height: 1.55;
+  }
+
+  .promo-filters {
+    flex-wrap: nowrap;
+    gap: 10px;
+    margin-left: -2px;
+    margin-right: -2px;
+    overflow-x: auto;
+    padding: 2px 2px 14px;
+    scrollbar-width: none;
+  }
+
+  .promo-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-btn {
+    border-radius: 999px;
+    flex: 0 0 auto;
+    font-size: 12px;
+    padding: 10px 16px;
+  }
+
+  .promo-swipe-wrapper {
+    margin-left: -2px;
+    margin-right: -12px;
+    padding-right: 12px;
+  }
+
+  .promo-card {
+    border-radius: 24px;
+    padding: 20px;
+    width: min(320px, calc(100vw - 40px));
+  }
+
+  .promo-title {
+    font-size: 20px;
+  }
+
+  .promo-desc {
+    font-size: 13px;
+  }
+
+  .new-price {
+    font-size: 25px;
+  }
+
+  .platform-card {
+    border-radius: 22px;
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .platform-icon-wrap {
+    height: 48px;
+    width: 48px;
+  }
+
+  .premium-variant-card {
+    border-radius: 22px;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 520px) {
+  body {
+    padding: 12px;
+  }
+
+  .container {
+    gap: 20px;
+  }
+
+  .navbar {
+    border-radius: 22px;
+    padding: 12px;
+  }
+
+  .hero-section {
+    padding: 34px 18px;
+  }
+
+  .cards-grid {
+    gap: 12px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+
+  .card-icon {
+    font-size: 24px;
+    height: 46px;
+    width: 46px;
+  }
+
+  .card h3 {
+    font-size: 16px;
+  }
+
+  .card p {
+    font-size: 11.5px;
+  }
+
+  .platform-card,
+  .premium-variant-card {
+    grid-column: 1 / -1;
+  }
+
+  .section-header {
+    margin-bottom: 18px;
+  }
+
+  .portfolio-section {
+    padding: 16px 0;
+  }
+
+  .order-modal {
+    align-items: flex-end;
+    padding: 12px;
+  }
+
+  .order-modal-content {
+    border-radius: 24px;
+    max-width: none;
+    padding: 20px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
   .cards-grid {
     grid-template-columns: 1fr;
   }
 
-  .card {
-    padding: 24px;
-  }
-
-  .card-icon {
-    width: 56px;
-    height: 56px;
-    font-size: 28px;
-  }
-
-  .promo-card {
-    width: clamp(220px, 85vw, 300px);
-    padding: 20px;
-  }
-
-  .promo-title {
-    font-size: 20px;
-  }
-
-  .new-price {
-    font-size: 24px;
-  }
-
-  .filter-btn {
-    padding: 8px 16px;
-    font-size: 12px;
-  }
-}
-
-@media (max-width: 480px) {
-  body {
-    padding: 16px 10px;
-  }
-
-  .navbar {
-    padding: 10px 16px;
-    border-radius: 16px;
-  }
-
-  .logo {
-    font-size: 16px;
-  }
-
-  .nav-links {
-    gap: 12px;
+  .hero-text h1 {
+    font-size: 34px;
   }
 
   .nav-links a {
     font-size: 11px;
-  }
-
-  .hero-section {
-    padding: 40px 16px;
-    border-radius: 20px;
-  }
-
-  .hero-text h1 {
-    font-size: 28px;
-    margin-bottom: 16px;
-  }
-
-  .badge {
-    font-size: 10px;
-    padding: 4px 12px;
-  }
-
-  .hero-text p {
-    font-size: 13px;
-    margin-bottom: 24px;
-  }
-
-  .hero-buttons {
-    gap: 10px;
-  }
-
-  .btn {
-    padding: 12px 24px;
-    font-size: 12px;
-  }
-
-  .section-header h2 {
-    font-size: 22px;
-  }
-
-  .card {
-    padding: 20px;
-  }
-
-  .card h3 {
-    font-size: 18px;
-  }
-
-  .card p {
-    font-size: 13px;
-  }
-
-  .card-icon {
-    width: 48px;
-    height: 48px;
-    font-size: 24px;
-    margin-bottom: 16px;
-  }
-
-  .promo-card {
-    width: clamp(200px, 88vw, 280px);
-    padding: 18px;
-  }
-
-  .promo-title {
-    font-size: 18px;
-  }
-
-  .promo-desc {
-    font-size: 12px;
-  }
-
-  .promo-badge {
-    top: 12px;
-    right: 12px;
-    font-size: 9px;
-    padding: 4px 10px;
-  }
-
-  .old-price {
-    font-size: 12px;
-  }
-
-  .new-price {
-    font-size: 20px;
-  }
-
-  .promo-btn {
-    padding: 12px;
-    font-size: 12px;
-  }
-
-  .variant-title {
-    font-size: 1.25rem;
-  }
-
-  .variant-new-price {
-    font-size: 1.5rem;
-  }
-
-  .platform-card {
-    padding: 14px 16px;
-    gap: 12px;
-  }
-
-  .platform-icon-wrap {
-    width: 44px;
-    height: 44px;
-    font-size: 20px;
-  }
-
-  .platform-info h3 {
-    font-size: 14px;
-  }
-
-  .platform-info p {
-    font-size: 11px;
-  }
-
-  .glass-back-btn {
-    padding: 8px 12px;
-    font-size: 11px;
-    margin-bottom: 12px;
-  }
-
-  .order-modal-content {
-    width: 92%;
-    max-width: 360px;
-    padding: 16px;
-  }
-
-  .messenger-btn,
-  .close-btn {
-    padding: 10px;
-    font-size: 0.8rem;
   }
 }
